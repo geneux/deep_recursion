@@ -1,0 +1,20 @@
+| Deep Recursion :: New Answer to the Question You Subscribed to!
+= "\r\n"
+| ===============================================================
+= "\r\n" * 2
+
+| Hi!
+= "\r\n"
+| Good news, we have new answer for you!
+= "\r\n" * 2
+
+| Question topic: #{@question.topic} (@#{@question.created_at.strftime('%H:%M:%S')}): #{url_for(@question)}
+= "\r\n"
+== "Question: \"#{@question.body.gsub(/\n/, "\r\n")}\""
+= "\r\n" * 2
+
+| At #{@answer.created_at.strftime('%H:%M:%S')} #{@answer.user.email} gives a new answer to this question:
+= "\r\n"
+== "\"#{@answer.body.gsub(/\n/, "\r\n")}\""
+
+= "\r\n"

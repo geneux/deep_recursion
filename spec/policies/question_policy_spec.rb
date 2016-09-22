@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe QuestionPolicy do
+describe QuestionPolicy do
   subject { described_class }
 
   let(:user) { create(:user) }
@@ -11,15 +11,15 @@ RSpec.describe QuestionPolicy do
     it('allow guest') { is_expected.to permit(nil, any_question) }
   end
 
-  permissions :show?, :create?, :rate? do
+  permissions :show?, :create?, :rate?, :subscribe? do
     it('allow user') { is_expected.to permit(user, any_question) }
   end
 
-  permissions :show?, :create?, :update?, :destroy?, :rate?, :rate_revoke? do
+  permissions :show?, :create?, :update?, :destroy?, :rate?, :rate_revoke?, :subscribe? do
     it('allow admin') { is_expected.to permit(create(:user, admin: true), any_question) }
   end
 
-  permissions :create?, :update?, :destroy?, :rate?, :rate_revoke? do
+  permissions :create?, :update?, :destroy?, :rate?, :rate_revoke?, :subscribe? do
     it('deny guest') { is_expected.not_to permit(nil, any_question) }
   end
 

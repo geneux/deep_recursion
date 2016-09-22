@@ -21,9 +21,15 @@
     hr
       p.lead.pull-left Answers:
       - if policy(@question).destroy?
-        .pull-right
-          => link_to question_path(@question.id), id: 'delete-question', class: "btn btn-danger", method: :delete
+        .pull-right#delete-question-container
+          => link_to question_path(@question.id), id: 'delete-question', class: 'btn btn-danger', method: :delete, style: 'margin-left:1em'
             ' Delete Question
+      - if policy(@question).subscribe?
+        .pull-right#subscribe-question-container
+          => button_to \
+              @subscription ? unsubscribe_question_path(@question.id) : subscribe_question_path(@question.id), \
+              method: @subscription ? :delete : :post, id: 'subscribe-question', class: 'btn btn-info'
+            ' #{@subscription ? 'Uns' : 'S' }ubscribe
 #answers
   - @question.answers.order(starred: :desc).each do |answer|
     - if answer.persisted?

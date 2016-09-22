@@ -12,7 +12,7 @@ describe Answer do
   it { is_expected.to have_db_index :user_id }
   it { is_expected.to have_db_index :question_id }
 
-  describe('#star!') do
+  describe '#star!' do
     it 'should star the selected answer' do
       question = create(:question)
       answer1 = create(:answer, question: question)
@@ -23,6 +23,14 @@ describe Answer do
       expect(answer1.reload.starred).to eq(false)
       expect(answer2.reload.starred).to eq(false)
       expect(answer3.reload.starred).to eq(true)
+    end
+  end
+
+  describe '#invoke_subscriptions_delivery' do
+    let(:answer) { build(:answer) }
+    it 'should invoke MailAnswerJob' do
+      expect(MailAnswerJob).to receive(:perform_later).with(answer)
+      answer.save!
     end
   end
 

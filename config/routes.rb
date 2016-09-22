@@ -1,7 +1,13 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   use_doorkeeper
 
   root 'questions#index'
+
+  authenticate :user, -> (user) { user.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   devise_for :users, controllers: {omniauth_callbacks: :omniauth_callbacks}
   match 'account/confirm_email', via: [:get, :patch]
@@ -22,6 +28,11 @@ Rails.application.routes.draw do
     resources :answers, only: [:new, :create, :edit, :update, :destroy],
         concerns: [:rateable, :commentable] do
       member { patch :star }
+    end
+
+    member do
+      post :subscribe, to: 'subscriptions#create'
+      delete :unsubscribe, to: 'subscriptions#destroy'
     end
   end
 

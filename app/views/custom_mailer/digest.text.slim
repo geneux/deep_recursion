@@ -1,0 +1,19 @@
+| Deep Recursion :: Daily Question Digest - #{@date}
+= "\r\n"
+| ====================================================
+= "\r\n" * 2
+
+| Hi!#{"\n"}
+
+- if @questions&.any?
+  | There #{@questions.size > 1 ? 'are': 'is'} #{pluralize(@questions.size, 'new question')} for today:
+  = "\r\n" * 2
+
+  - @questions.each_with_index do |question, cnt|
+    | #{cnt + 1}. #{question.topic} (@#{question.created_at.strftime('%H:%M:%S')}): #{url_for(question)}
+    = "\r\n"
+- else
+  | There are no new questions for today.
+  = "\r\n"
+
+= "\r\n"

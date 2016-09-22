@@ -11,10 +11,16 @@ class Answer < ActiveRecord::Base
   validates :user_id, :question_id, presence: true
   validates :body, presence: true, length: (20..50_000)
 
+  after_commit :invoke_subscriptions_delivery, on: :create
+
   def star!
     question.transaction do
       question.answers.where(starred: true).update_all(starred: false)
       update!(starred: true)
     end
+  end
+
+  def invoke_subscriptions_delivery
+    MailAnswerJob.perform_later(self)
   end
 end

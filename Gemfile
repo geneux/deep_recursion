@@ -31,6 +31,9 @@ gem 'doorkeeper'
 gem 'active_model_serializers'
 gem 'oj'
 gem 'oj_mimic_json'
+gem 'sidekiq'
+gem 'sinatra', require: false
+gem 'whenever'
 
 # gem 'unicorn'
 gem 'thin'
@@ -53,6 +56,7 @@ group :test do
   gem 'capybara-webkit'
   gem 'capybara-email'
   gem 'json_spec'
+  gem 'test_after_commit'
 end
 
 group :development do

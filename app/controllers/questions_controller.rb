@@ -3,7 +3,7 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: [:index, :show]
   before_action :load_question, only: [:show, :update, :destroy]
-  before_action :build_answer, only: :show
+  before_action :build_answer, :load_subscription, only: :show
 
   respond_to :js
 
@@ -43,6 +43,10 @@ class QuestionsController < ApplicationController
 
   def build_answer
     @answer = @question.answers.build
+  end
+
+  def load_subscription
+    @subscription = @question.subscriptions.find_by(user_id: current_user.id) if user_signed_in?
   end
 
   def question_params

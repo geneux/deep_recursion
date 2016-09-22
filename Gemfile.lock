@@ -79,6 +79,7 @@ GEM
       json (>= 1.7)
       mime-types (>= 1.16)
       mimemagic (>= 0.3.0)
+    chronic (0.10.2)
     cocoon (1.2.9)
     code_analyzer (0.4.7)
       sexp_processor
@@ -91,6 +92,7 @@ GEM
       execjs
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.2)
+    connection_pool (2.2.0)
     cookiejar (0.3.3)
     daemons (1.2.4)
     database_cleaner (1.5.3)
@@ -159,7 +161,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    hashie (3.4.4)
+    hashie (3.4.6)
     http_parser.rb (0.6.0)
     i18n (0.7.0)
     jbuilder (2.6.0)
@@ -175,7 +177,7 @@ GEM
       rspec (>= 2.0, < 4.0)
     jsonapi (0.1.1.beta2)
       json (~> 1.8)
-    jwt (1.5.4)
+    jwt (1.5.6)
     launchy (2.4.3)
       addressable (~> 2.3)
     letter_opener (1.4.1)
@@ -234,7 +236,7 @@ GEM
       json (~> 1.3)
       omniauth-oauth (~> 1.1)
     orm_adapter (0.5.0)
-    parser (2.3.1.2)
+    parser (2.3.1.4)
       ast (~> 2.2)
     pg (0.18.4)
     pkg-config (1.1.7)
@@ -258,6 +260,8 @@ GEM
     rack-contrib (1.4.0)
       git-version-bump (~> 0.15)
       rack (~> 1.4)
+    rack-protection (1.5.3)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.6)
@@ -293,13 +297,14 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.1.0)
-    rake (11.2.2)
+    rake (11.3.0)
     rb-fsevent (0.9.7)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
     rdoc (4.2.2)
       json (~> 1.4)
-    remotipart (1.2.1)
+    redis (3.3.1)
+    remotipart (1.3.0)
     request_store (1.3.1)
     require_all (1.3.3)
     responders (2.3.0)
@@ -325,7 +330,7 @@ GEM
       rspec-mocks (~> 3.5.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
-    rubocop (0.42.0)
+    rubocop (0.43.0)
       parser (>= 2.3.1.1, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
@@ -347,6 +352,15 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
+    sidekiq (4.2.1)
+      concurrent-ruby (~> 1.0)
+      connection_pool (~> 2.2, >= 2.2.0)
+      rack-protection (~> 1.5)
+      redis (~> 3.2, >= 3.2.1)
+    sinatra (1.4.7)
+      rack (~> 1.5)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
     skim (0.10.0)
       coffee-script
       coffee-script-source (>= 1.2.0)
@@ -371,6 +385,8 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     temple (0.7.7)
+    test_after_commit (1.1.0)
+      activerecord (>= 3.2)
     thin (1.7.0)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -396,6 +412,8 @@ GEM
     websocket-driver (0.6.4)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
+    whenever (0.9.7)
+      chronic (>= 0.6.3)
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -450,15 +468,19 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   shoulda-matchers (~> 3.1)
+  sidekiq
+  sinatra
   skim
   slim-rails
   spring
   spring-commands-rspec
   sprockets (= 3.6.3)
+  test_after_commit
   thin
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
+  whenever
 
 BUNDLED WITH
    1.12.5

@@ -25,18 +25,30 @@ describe QuestionsController do
   describe 'GET #show' do
     let(:answers) { create_list(:answer, 3, question: question) }
 
-    before { get :show, id: question }
+    context 'for unauthenticated user (authentication not needed)' do
+      before { get :show, id: question }
 
-    it 'assings the requested Question to @question' do
-      expect(assigns(:question)).to eq question
+      it 'assings the requested Question to @question' do
+        expect(assigns(:question)).to eq question
+      end
+
+      it 'assigns new Answer for the Question' do
+        expect(assigns(:answer)).to be_a_new(Answer)
+      end
+
+      it 'renders #show view' do
+        expect(response).to render_template :show
+      end
     end
 
-    it 'assigns new Answer for the Question' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
+    context 'for authenticated user' do
+      sign_in_user
+      let!(:new_subscription) { create(:subscription, user: @user, question: question) }
 
-    it 'renders #show view' do
-      expect(response).to render_template :show
+      it 'should load subscription' do
+        get :show, id: question
+        expect(assigns(:subscription)).to eq new_subscription
+      end
     end
   end
 
@@ -65,11 +77,19 @@ describe QuestionsController do
       it 'associates new Question with correct User' do
         expect { post_question }.to change(@user.questions, :count).by(1)
       end
+
+      it 'creates Subscription to the Question' do
+        expect { post_question }.to change(Subscription, :count).by(1)
+      end
     end
 
     context 'with invalid attributes' do
       it 'doesn\'t store the question' do
         expect { post_invalid_question }.to_not change(Question, :count)
+      end
+
+      it 'shouldn\'t create Subscription to the Question' do
+        expect { post_invalid_question }.to_not change(Subscription, :count)
       end
     end
 
@@ -113,7 +133,7 @@ describe QuestionsController do
         edited_question = create(:question, user: create(:user))
         patch :update, id: question, question: {
             topic: edited_question.topic, body: edited_question.body},
-              user: edited_question.user, format: :js
+            user: edited_question.user, format: :js
         question.reload
         expect(question.user).not_to eq edited_question.user
       end
