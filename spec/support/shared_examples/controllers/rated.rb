@@ -46,22 +46,22 @@ shared_examples_for :rated do
   describe 'POST #rate_revoke' do
     before do
       own_rating
-      others_rating
+      own_rating_others_rateable
     end
 
-    it 'assigns @rateable to rateadle instance' do
+    it 'assigns @rateable to rateable instance' do
       post_rate_revoke
-      expect(assigns(:rateable)).to eq rateable
+      expect(assigns(:rateable)).to eq others_rateable
     end
 
-    it 'doesn\'t revoke rating for other users\' rateables' do
+    it 'doesn\'t revoke rating for own rateable' do
       expect { post_rate_revoke }
-          .not_to change { others_rateable.rating }
+          .not_to change { rateable.rating }
     end
 
-    it 'revokes rate for own rateables' do
+    it 'revokes rating for other users\' rateable' do
       expect { post_rate_revoke }
-          .to change { rateable.rating }.by(-1)
+          .to change { others_rateable.rating }.by(-1)
     end
 
     it 'responses with HTTP status 200' do

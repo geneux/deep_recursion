@@ -1,58 +1,62 @@
-.row
-  .col-sm-12
-    = link_to questions_path, class: "btn btn-info btn-sm pull-right"
-      ' Back to the Questions
-
-.row
-  .col-sm-12
-    h3 = @question.topic
-    hr
-    p
-      = @question.body
-    #question-attachments
-      = render 'attachments', attachable: @question
-
-.row
-  .col-sm-12
-    = render 'comments/list', commentable: @question, comet: false
-
-.row
-  .col-sm-12
-    hr
-      p.lead.pull-left Answers:
-      - if policy(@question).destroy?
-        .pull-right#delete-question-container
-          => link_to question_path(@question.id), id: 'delete-question', class: 'btn btn-danger', method: :delete, style: 'margin-left:1em'
-            ' Delete Question
-      - if policy(@question).subscribe?
-        .pull-right#subscribe-question-container
-          => button_to \
-              @subscription ? unsubscribe_question_path(@question.id) : subscribe_question_path(@question.id), \
-              method: @subscription ? :delete : :post, id: 'subscribe-question', class: 'btn btn-info'
-            ' #{@subscription ? 'Uns' : 'S' }ubscribe
-#answers
-  - @question.answers.order(starred: :desc).each do |answer|
-    - if answer.persisted?
-      = render 'answer', answer: answer, comet: false
-
-- if policy(@answer).create?
-  .row#afterAnswers
+- cache [@question, policy(@question).edit?, policy(@question).destroy?, policy(@answer).create?] do
+  .row
     .col-sm-12
-      = form_for [@question, @answer], remote: true do |f|
-        .form-group
-          = f.label :body, 'Your answer:', class: 'lead'
-          #answerErrors
-          = f.text_area :body, class: 'form-control input new-answer-body', rows: 10, placeholder: 'Place your answer here'
-          h4 Answer attachments:
-          = f.fields_for :attachments, @answer.attachments.build do |attachment|
-            #attachments
-              = render 'attachment_fields', f: attachment
-            .links
-              = link_to_add_association 'Add attachment', f, :attachments, class: 'btn btn-sm btn-info'
-        button.btn.btn-primary.pull-right type="submit" Send an Answer
+      = link_to questions_path, class: 'btn btn-info btn-sm pull-right'
+        ' Back to the Questions
+
+  .row
+    .col-sm-12
+      h3 = @question.topic
+      hr
+      p
+        = @question.body
+      #question-attachments
+        = render 'attachments', attachable: @question
+
+  .row
+    .col-sm-12
+      = render 'comments/list', commentable: @question, comet: false
+
+  .row
+    .col-sm-12
+      hr
+        p.lead.pull-left Answers:
+        - if policy(@question).destroy?
+          .pull-right#delete-question-container
+            => link_to question_path(@question.id), id: 'delete-question', class: 'btn btn-danger', method: :delete, style: 'margin-left:1em'
+              ' Delete Question
+        - cache [@subscription, policy(@question).subscribe?] do
+          - if policy(@question).subscribe?
+            .pull-right#subscribe-question-container
+              => button_to \
+                  @subscription ? unsubscribe_question_path(@question.id) : subscribe_question_path(@question.id), \
+                  method: @subscription ? :delete : :post, id: 'subscribe-question', class: 'btn btn-info'
+                ' #{@subscription ? 'Uns' : 'S' }ubscribe
+  #answers
+    - @question.answers.order(starred: :desc).each do |answer|
+      - if answer.persisted?
+        - cache answer do
+          = render 'answer', answer: answer, comet: false
+
+  - if policy(@answer).create?
+    .row#afterAnswers
+      .col-sm-12
+        = form_for [@question, @answer], remote: true do |f|
+          .form-group
+            = f.label :body, 'Your answer:', class: 'lead'
+            #answerErrors
+            - cache [:answer_form, @question] do
+              = f.text_area :body, class: 'form-control input new-answer-body', rows: 10, placeholder: 'Place your answer here'
+              h4 Answer attachments:
+              = f.fields_for :attachments, @answer.attachments.build do |attachment|
+                #attachments
+                  = render 'attachment_fields', f: attachment
+                .links
+                  = link_to_add_association 'Add attachment', f, :attachments, class: 'btn btn-sm btn-info'
+          button.btn.btn-primary.pull-right type="submit" Send an Answer
 
 = subscribe_to "/questions/#{@question.id}/answers"
-= subscribe_to "/comments"
+= subscribe_to '/comments'
 
 coffee:
   ready = ->

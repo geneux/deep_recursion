@@ -9,3 +9,10 @@ dependencies:
     - gem install bundler --pre
   post:
     - bundle exec ./bin/comet
+
+database:
+  post:
+    - bundle exec rake ts:index
+    - sudo cp ./config/test.sphinx.conf /etc/sphinxsearch/sphinx.conf
+    - sudo sed -i -e 's,START=no,START=yes,' /etc/default/sphinxsearch
+    - service sphinxsearch start

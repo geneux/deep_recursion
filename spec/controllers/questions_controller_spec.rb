@@ -197,9 +197,10 @@ describe QuestionsController do
 
     let(:own_rating) { create(:question_rating, user: user, rateable: question) }
     let(:others_rating) { create(:question_rating, user: other_user, rateable: others_question) }
+    let(:own_rating_others_rateable) { create(:question_rating, user: user, rateable: others_question) }
 
     let(:post_rate_inc) { post :rate_inc, id: others_question, format: :js }
     let(:post_rate_dec) { post :rate_dec, id: others_question, format: :js }
-    let(:post_rate_revoke) { post :rate_revoke, id: question, format: :js }
+    let(:post_rate_revoke) { post :rate_revoke, id: others_question, format: :js }
   end
 end

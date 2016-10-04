@@ -1,35 +1,36 @@
-div id="answer-#{answer.id}" class="#{answer.starred ? 'answer-starred' : ''}"
-  .row
-    .col-xs-12
-      - if answer.starred
-        p.best-answer
-          strong Best Answer:
-      .pull-right id="answer-buttons-#{answer.id}"
-      - if comet
-        javascript:
-          $("#answer-buttons-#{answer.id}").html(JST["answer_buttons"]({
-            question_id: "#{answer.question.id}",
-            question_user_id: "#{answer.question.user.id}",
-            answer_id: "#{answer.id}",
-            answer_user_id: "#{answer.user.id}"
-          }));
-      - else
-        - if policy(answer).destroy?
-          => link_to 'Delete', answer_path(answer), id: "delete-answer-#{answer.id}", class: "btn btn-danger btn-sm", method: :delete, remote: true
-        - if policy(answer).edit?
-          => link_to 'Edit', '#', id: "edit-answer-link-#{answer.id}", class: "btn btn-info btn-sm edit-answer-link", data: {answer_id: answer.id}
-        - if policy(answer).star?
-          = link_to 'Star', star_answer_path(answer), id: "star-answer-link-#{answer.id}", class: "btn btn-warning btn-sm star-answer-link", data: {answer_id: answer.id}, method: :patch, remote: true
-      = render 'shared/rating', rateable: answer
-      blockquote
-        = answer.body
-        = render 'questions/attachments', attachable: answer
-        = render 'comments/list', commentable: answer, comet: false
-        - if policy(answer).update?
-          div
-            = form_for answer, remote: true do |f|
-              = f.label :body, 'Answer'
-              .little id="answer-errors-#{answer.id}"
-              = f.text_area :body, class: 'form-control'
-              = f.submit 'Save', class: "btn btn-info btn-sm pull-right"
-      hr
+- cache [answer, policy(answer).edit?, policy(answer).destroy?, policy(answer).star?, comet]
+  div id="answer-#{answer.id}" class="#{answer.starred ? 'answer-starred' : ''}"
+    .row
+      .col-xs-12
+        - if answer.starred
+          p.best-answer
+            strong Best Answer:
+        .pull-right id="answer-buttons-#{answer.id}"
+        - if comet
+          javascript:
+            $("#answer-buttons-#{answer.id}").html(JST["answer_buttons"]({
+              question_id: "#{answer.question.id}",
+              question_user_id: "#{answer.question.user.id}",
+              answer_id: "#{answer.id}",
+              answer_user_id: "#{answer.user.id}"
+            }));
+        - else
+          - if policy(answer).destroy?
+            => link_to 'Delete', answer_path(answer), id: "delete-answer-#{answer.id}", class: 'btn btn-danger btn-sm', method: :delete, remote: true
+          - if policy(answer).edit?
+            => link_to 'Edit', '#', id: "edit-answer-link-#{answer.id}", class: 'btn btn-info btn-sm edit-answer-link', data: {answer_id: answer.id}
+          - if policy(answer).star?
+            = link_to 'Star', star_answer_path(answer), id: "star-answer-link-#{answer.id}", class: 'btn btn-warning btn-sm star-answer-link', data: {answer_id: answer.id}, method: :patch, remote: true
+        = render 'shared/rating', rateable: answer
+        blockquote
+          = answer.body
+          = render 'questions/attachments', attachable: answer
+          = render 'comments/list', commentable: answer, comet: false
+          - if policy(answer).edit?
+            div
+              = form_for answer, remote: true do |f|
+                = f.label :body, 'Answer'
+                .little id="answer-errors-#{answer.id}"
+                = f.text_area :body, class: 'form-control'
+                = f.submit 'Save', class: 'btn btn-info btn-sm pull-right'
+        hr

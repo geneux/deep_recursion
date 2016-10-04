@@ -202,9 +202,10 @@ describe AnswersController do
 
     let(:own_rating) { create(:answer_rating, user: user, rateable: answer) }
     let(:others_rating) { create(:answer_rating, user: other_user, rateable: others_answer) }
+    let(:own_rating_others_rateable) { create(:answer_rating, user: user, rateable: others_answer) }
 
     let(:post_rate_inc) { post :rate_inc, id: others_answer, question_id: question, js: true }
     let(:post_rate_dec) { post :rate_dec, id: others_answer, question_id: question, js: true }
-    let(:post_rate_revoke) { post :rate_revoke, id: answer, question_id: question, js: true }
+    let(:post_rate_revoke) { post :rate_revoke, id: others_answer, question_id: question, js: true }
   end
 end

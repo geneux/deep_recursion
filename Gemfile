@@ -36,6 +36,7 @@ gem 'sinatra', require: false
 gem 'whenever'
 gem 'dotenv'
 gem 'dotenv-deployment', require: 'dotenv/deployment'
+gem 'redis-rails'
 
 gem 'mysql2' # Don't worry, it's for Sphinx only!
 gem 'thinking-sphinx'

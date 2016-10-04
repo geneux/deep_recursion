@@ -1,10 +1,11 @@
 .comments id="#{commentable.entity}-comments-#{commentable.id}-container"
-  div id="#{commentable.entity}-comments-#{commentable.id}-header" style="#{commentable.comments.any? ? '' : 'display:none'}"
-    hr style="margin:2px 4px 0 4px"
-    h4 Comments:
-  div id="#{commentable.entity}-comments-#{commentable.id}" style="margin-left:40px"
-    - commentable.comments.each do |comment|
-      = render 'comments/comment', comment: comment
+  - cache [commentable, :comment_list] do
+    div id="#{commentable.entity}-comments-#{commentable.id}-header" style="#{commentable.comments.any? ? '' : 'display:none'}"
+      hr style="margin:2px 4px 0 4px"
+      h4 Comments:
+    div id="#{commentable.entity}-comments-#{commentable.id}" style="margin-left:40px"
+      - commentable.comments.each do |comment|
+        = render 'comments/comment', comment: comment
   
   - if policy(Comment).create?
     div id="#{commentable.entity}-comments-#{commentable.id}-errors"

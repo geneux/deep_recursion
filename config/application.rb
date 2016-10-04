@@ -41,6 +41,9 @@ module DeepRecursion
     ::Sass::Script::Value::Number.precision = [8, ::Sass::Script::Value::Number.precision].max
 
     config.active_job.queue_adapter = :sidekiq
+    config.cache_store = :redis_store, 'redis://localhost:6379/0/cache', {
+        expires_in: 3.hours
+    }
 
     config.generators do |g|
       g.helper false

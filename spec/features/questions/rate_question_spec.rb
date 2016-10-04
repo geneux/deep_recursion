@@ -3,7 +3,7 @@ require 'features_helper'
 feature 'Rate the Question', %q(
   To select the best Question
   As a User
-  I want to rate other Users' Questions and revoke my votes
+  I want to rate other Users' Questions and revoke my rating
 ) do
   given(:user) { create(:user) }
   given(:other_user) { create(:user) }
@@ -66,7 +66,7 @@ feature 'Rate the Question', %q(
       end
     end
 
-    scenario 'can revoke own vote and rate other Question', :js do
+    scenario 'can revoke own rating and rate other Question', :js do
       alt_question = create(:question)
       visit questions_path
 

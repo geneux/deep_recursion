@@ -2,8 +2,9 @@
   hr
   p
     | Attachments:
-    - attachable.attachments.each do |a|
-      div id="attachment-#{a.id}"
-        => glyph :paperclip
-        => link_to a.file.filename, a.file.url
-        = link_to '&times;'.html_safe, attachment_path(a), remote: true, method: :delete, id: "delete-attachment-#{a.id}", style: 'font-size:1.3em;font-weight:bold;color:red'
+    - attachable.attachments.each do |attachment|
+      - cache attachment do
+        div id="attachment-#{attachment.id}"
+          => glyph :paperclip
+          => link_to attachment.file.filename, attachment.file.url
+          = link_to '&times;'.html_safe, attachment_path(attachment), remote: true, method: :delete, id: "delete-attachment-#{attachment.id}", style: 'font-size:1.3em;font-weight:bold;color:red'

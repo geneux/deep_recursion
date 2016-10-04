@@ -1,30 +1,32 @@
-div id="question-#{question.id}"
-  row
-    .col-sm-10
-      p.lead
-        = link_to question_path(question)
-          = question.topic
-        - if policy(question).update?
-        div
-          = form_for question, remote: true do |f|
-            .little id="question-errors-#{question.id}"
-            = f.label :topic, 'Topic'
-            = f.text_field :topic, class: 'form-control'
-            = f.label :body, 'Question'
-            = f.text_area :body, class: 'form-control'
-            = f.submit 'Save', class: "btn btn-info btn-sm pull-right"
-    .col-sm-2
-      .pull-right id="question-buttons-#{question.id}"
-      - if comet
-        javascript:
-          $("#question-buttons-#{question.id}").html(JST["question_buttons"]({
-            question_id: "#{question.id}",
-            question_user_id: "#{question.user.id}"
-          }));
-      - else
-        - if policy(question).edit?
-          = link_to 'Edit', '#', id: "edit-question-link-#{question.id}", class: "btn btn-info btn-sm edit-question-link pull-right", data: {question_id: question.id}
-      = render 'shared/rating', rateable: question
-  row
-    .col-xs-12
-      hr
+- cache [question, policy(question).update?, comet]
+  div id="question-#{question.id}"
+    .row
+      .col-sm-10
+        p.lead
+          = link_to question_path(question)
+            = question.topic
+          - if policy(question).update?
+          div
+            = form_for question, remote: true do |f|
+              .little id="question-errors-#{question.id}"
+              = f.label :topic, 'Topic'
+              = f.text_field :topic, class: 'form-control'
+              = f.label :body, 'Question'
+              = f.text_area :body, class: 'form-control'
+              = f.submit 'Save', class: "btn btn-info btn-sm pull-right"
+      .col-sm-2
+        .pull-right id="question-buttons-#{question.id}"
+        - if comet
+          javascript:
+            $("#question-buttons-#{question.id}").html(JST["question_buttons"]({
+              question_id: "#{question.id}",
+              question_user_id: "#{question.user.id}"
+            }));
+        - else
+          - if policy(question).edit?
+            = link_to 'Edit', '#', id: "edit-question-link-#{question.id}", \
+              class: 'btn btn-info btn-sm edit-question-link pull-right', data: {question_id: question.id}
+        = render 'shared/rating', rateable: question
+    .row
+      .col-xs-12
+        hr

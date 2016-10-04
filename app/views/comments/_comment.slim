@@ -1,9 +1,10 @@
-p id="comment-#{comment.id}"
-  = comment.body
-  span.little style="color:gray"
-    '
-    ' &mdash;
-    => comment.user.email
-    ' at
-    = l comment.created_at, format: :short
-hr style="margin:0 0 8px 0"
+- cache [:comment_form, comment] do
+  p id="comment-#{comment.id}"
+    = comment.body
+    span.little style="color:gray"
+      '
+      ' &mdash;
+      => comment.user.email
+      ' at
+      = l comment.created_at, format: :short
+  hr style="margin:0 0 8px 0"
